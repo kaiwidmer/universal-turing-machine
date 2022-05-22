@@ -37,9 +37,12 @@ applyTransitions Nothing _ state = state
 applyTransitions _ [] state = state
 applyTransitions (Just transition) transitions state =
    let
-      nextState = updateState (moveHead (writeCharacter state (tapeOut transition)) (next transition)) (endState transition)
+      nextState = applyTransition state transition
    in
       applyTransitions (nextTransition nextState transitions) transitions nextState
+      
+applyTransition :: MachineState -> Transition -> MachineState
+applyTransition state transition = updateState (moveHead (writeCharacter state (tapeOut transition)) (next transition)) (endState transition)
 
 updateState :: MachineState -> Int -> MachineState
 updateState state newState = MachineState { tapeLeft = tapeLeft state, tapeRight = tapeRight state, currentState = newState }
