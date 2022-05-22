@@ -1,5 +1,5 @@
 module Lib
-    ( someFunc
+    ( runUniversalTuringMachine
     ) where
 
 import Debug.Trace (trace)
@@ -9,17 +9,20 @@ multiplierConfiguration :: String
 multiplierConfiguration = "010100100010011010001000000000010001011001010010100110010001000100010011000101000010001001100010001000000001000101100001010000101001100001000100000100010011000001010000010100110000010001000000101011000000101000000101011000000100010000000100010110000000101000000010101100000001000100010100110000000010100000000101011000000001000100000000010001011000000000101000000000101011000000000100010101001100000000001010000000000101011000000000010001000000000001000100"
 
 -- 2 x 4
-input1 :: String
-input1 = "00 0000"
+input :: String
+input = "00 0000"
 -- End Configuration for multiplying
 
 empty :: Char
 empty = ' '
 
-someFunc :: IO ()
-someFunc = do
+separator :: Char
+separator = '1'
+
+runUniversalTuringMachine :: IO ()
+runUniversalTuringMachine = do
    let configuration = parseConfiguration multiplierConfiguration
-   let initialState = MachineState { tapeLeft = [empty], tapeRight = input1, currentState = 1 }
+   let initialState = MachineState { tapeLeft = [empty], tapeRight = input, currentState = 1 }
    let finalState = show (applyTransitions (nextTransition initialState configuration) configuration initialState)
    putStrLn ("Resulting state: " ++ finalState)
 
@@ -83,7 +86,7 @@ parseConfiguration rows = map (mapToTransitions . splitRow) (splitIntoRows rows)
 
 splitIntoRows :: [Char] -> [[Char]]
 splitIntoRows = foldr (\character result -> 
-  if character == '1' && containsFirst result character 
+  if character == separator && containsFirst result character 
   then [] : removeFirst result 
   else appendChar character result) 
   []
@@ -109,7 +112,7 @@ containsFirst list character = (==) (head $ head list) character
 
 
 splitRow :: [Char] -> [[Char]]
-splitRow = foldr (\character result -> if character == '1' then []:result else appendChar character result) []
+splitRow = foldr (\character result -> if character == separator then []:result else appendChar character result) []
 
 mapToTransitions :: [[Char]] -> Transition
 mapToTransitions [start, tapeI, end, tapeO, headD] =
@@ -117,8 +120,9 @@ mapToTransitions [start, tapeI, end, tapeO, headD] =
 mapToTransitions x = errorWithoutStackTrace ("Illegal encoded row:" ++ show x)
 
 toTapeValue :: [Char] -> Char
-toTapeValue ['0', '0', '0'] = empty
-toTapeValue xs = head $ show ((-) (length xs) 1)
+toTapeValue xs
+  | length xs == 3 = empty
+  | otherwise =  head $ show ((-) (length xs) 1)
 
 toHeadDirection :: [Char] -> HeadDirection
 toHeadDirection x
