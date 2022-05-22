@@ -57,7 +57,7 @@ moveHead state headDirection =
     newTapeLeft = if headDirection == MoveLeft then reduceOneRight $ tapeLeft state else addRight (tapeLeft state) (head $ tapeRight state)
     newTapeRight = if headDirection == MoveLeft then last (tapeLeft state) : tapeRight state else reduceOneLeft $ tapeRight state
   in
-  MachineState { tapeLeft = newTapeLeft, tapeRight = newTapeRight, currentState = currentState state}
+    MachineState { tapeLeft = newTapeLeft, tapeRight = newTapeRight, currentState = currentState state}
 
 nextTransition :: MachineState -> [Transition] -> Maybe Transition
 nextTransition  _ [] = Nothing
@@ -86,10 +86,10 @@ parseConfiguration rows = map (mapToTransitions . splitRow) (splitIntoRows rows)
 
 splitIntoRows :: [Char] -> [[Char]]
 splitIntoRows = foldr (\character result -> 
-  if character == separator && containsFirst result character 
-  then [] : removeFirst result 
-  else appendChar character result) 
-  []
+    if character == separator && containsFirst result character 
+    then [] : removeFirst result 
+    else appendChar character result
+  ) []
 
 appendChar :: Char -> [[Char]] -> [[Char]]
 appendChar character [] = [[character]]
