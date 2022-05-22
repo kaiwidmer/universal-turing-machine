@@ -1,0 +1,8 @@
+.stack-work/
+*~
+
+#intellij
+.idea
+**.iml
+
+**/.ds_store

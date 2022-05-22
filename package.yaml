@@ -1,0 +1,47 @@
+name:                UniversalTuringMachine
+version:             1.0.0.0
+github:              "kaiwidmer/universal-turing-machine"
+license:             BSD3
+author:              "Kai Widmer"
+maintainer:          "kaiwi@bluewin.ch"
+copyright:           "2022 Kai Widmer"
+
+extra-source-files:
+- README.md
+
+# Metadata used when publishing your package
+# synopsis:            Short description of your package
+# category:            App category here
+
+# To avoid duplicated efforts in documentation and dealing with the
+# complications of embedding Haddock markup inside cabal files, it is
+# common to point users to the README.md file.
+description:         Please see the README on GitHub at <https://github.com/kaiwidmer/universal-turing-machine#readme>
+
+dependencies:
+- base >= 4.7 && < 5
+
+library:
+  source-dirs: src
+
+executables:
+  UniversalTuringMachine-exe:
+    main:                Main.hs
+    source-dirs:         app
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - UniversalTuringMachine
+
+tests:
+  UniversalTuringMachine-test:
+    main:                Spec.hs
+    source-dirs:         test
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - UniversalTuringMachine
